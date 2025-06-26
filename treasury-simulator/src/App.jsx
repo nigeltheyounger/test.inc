@@ -320,7 +320,7 @@ const TreasurySimulator = () => {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
             Treasury Movement Simulator
           </h1>
-          <p className="text-slate-300">Simulate multi-currency treasury operations and fund movements</p>
+          <p className="text-slate-300">Multi-currency treasury operations and fund movements</p>
         </div>
 
         {/* Portfolio Summary */}
