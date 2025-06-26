@@ -119,7 +119,7 @@ const TreasurySimulator = () => {
   // Show notification
   const showNotification = (message, type = "success") => {
     setNotification({ message, type })
-    setTimeout(() => setNotification(null), 3000)
+    setTimeout(() => setNotification(null), 4000) // Increased timeout for error messages
   }
 
   // Format currency
@@ -302,15 +302,33 @@ const TreasurySimulator = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
-      {/* Notification */}
+      {/* Notification - Fixed positioning with higher z-index */}
       {notification && (
         <div
-          className={`fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 ${
-            notification.type === "success" ? "bg-green-600" : "bg-red-600"
-          } text-white animate-slide-in`}
+          className={`fixed top-4 right-4 z-[9999] px-6 py-4 rounded-lg shadow-2xl flex items-center gap-3 max-w-md ${
+            notification.type === "success" 
+              ? "bg-green-600 border border-green-500" 
+              : "bg-red-600 border border-red-500"
+          } text-white animate-slide-in backdrop-blur-sm`}
+          style={{
+            boxShadow: notification.type === "error" 
+              ? "0 20px 25px -5px rgba(239, 68, 68, 0.3), 0 10px 10px -5px rgba(239, 68, 68, 0.2)" 
+              : "0 20px 25px -5px rgba(34, 197, 94, 0.3), 0 10px 10px -5px rgba(34, 197, 94, 0.2)"
+          }}
         >
-          {notification.type === "success" ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
-          {notification.message}
+          {notification.type === "success" ? (
+            <CheckCircle className="w-5 h-5 flex-shrink-0" />
+          ) : (
+            <AlertCircle className="w-5 h-5 flex-shrink-0" />
+          )}
+          <span className="text-sm font-medium leading-relaxed">{notification.message}</span>
+          <button
+            onClick={() => setNotification(null)}
+            className="ml-2 text-white/80 hover:text-white transition-colors"
+            aria-label="Close notification"
+          >
+            ×
+          </button>
         </div>
       )}
 
@@ -512,9 +530,9 @@ const TreasurySimulator = () => {
         </div>
       </div>
 
-      {/* Transfer Modal */}
+      {/* Transfer Modal - Reduced z-index to be below notification */}
       {showTransferModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[9998]">
           <div className="bg-slate-900 rounded-2xl p-6 w-full max-w-md border border-white/20">
             <h3 className="text-xl font-semibold mb-4">Create Transfer</h3>
 
@@ -644,7 +662,7 @@ const TreasurySimulator = () => {
         </div>
       )}
 
-      <style jsx>{`
+       <style jsx>{`
         @keyframes slide-in {
           from {
             transform: translateX(100%);
@@ -652,11 +670,30 @@ const TreasurySimulator = () => {
           }
           to {
             transform: translateX(0);
-            opacity: 1;
+                        opacity: 1;
           }
         }
         .animate-slide-in {
           animation: slide-in 0.3s ease-out;
+        }
+        
+       
+        .notification-container {
+          pointer-events: auto;
+        }
+        
+        /* Add pulse animation for error notifications */
+        @keyframes pulse-error {
+          0%, 100% {
+            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+          }
+          50% {
+            box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+          }
+        }
+        
+        .error-notification {
+          animation: slide-in 0.3s ease-out, pulse-error 2s infinite;
         }
       `}</style>
     </div>
@@ -664,3 +701,6 @@ const TreasurySimulator = () => {
 }
 
 export default TreasurySimulator
+
+
+
